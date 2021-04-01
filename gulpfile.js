@@ -31,7 +31,7 @@ function watchTut() {
 }
 
 const jsPath = "src/assets/js/**/*.js";
-const cssPath = "src/assets/css/**/*.css";
+const cssPath = "src/assets/scss/**/*.scss";
 
 function copyHtml() {
   return src("src/*.html").pipe(gulp.dest("dist"));
@@ -50,9 +50,10 @@ function jsTask() {
     .pipe(dest("dist/assets/js"));
 }
 
-function cssTask() {
+function scssTask() {
   return src(cssPath)
     .pipe(sourcemaps.init())
+    .pipe(sass().on("error", sass.logError))
     .pipe(concat("style.css"))
     .pipe(postcss([autoprefixer(), cssnano()])) //not all plugins work with postcss only the ones mentioned in their documentation
     .pipe(sourcemaps.write("."))
@@ -60,17 +61,17 @@ function cssTask() {
 }
 
 function watchTask() {
-  watch([cssPath, jsPath], { interval: 1000 }, parallel(cssTask, jsTask));
+  watch([cssPath, jsPath], { interval: 1000 }, parallel(scssTask, jsTask));
 }
 
 exports.style = style;
 exports.watch = watchTut;
 
-exports.cssTask = cssTask;
+exports.scssTask = scssTask;
 exports.jsTask = jsTask;
 exports.copyHtml = copyHtml;
 exports.imgTask = imgTask;
 exports.default = series(
-  parallel(copyHtml, imgTask, jsTask, cssTask),
+  parallel(copyHtml, imgTask, jsTask, scssTask),
   watchTask
 );
