@@ -25,3 +25,12 @@ body {
   background: var(--radial-background01);
   background-attachment: fixed;
 }
+
+a {
+  color: black;
+  background-color: white;
+  text-decoration: none;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10%;
+}

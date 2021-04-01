@@ -45,7 +45,7 @@ function scssTask() {
 function watchTask() {
   browserSync.init({
     server: {
-      baseDir: "./dist",
+      baseDir: "dist",
     },
   });
   watch(scssPath, scssTask);
