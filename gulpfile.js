@@ -8,6 +8,28 @@ const cssnano = require("cssnano");
 const autoprefixer = require("autoprefixer");
 const { src, series, parallel, dest, watch } = require("gulp");
 
+const sass = require("gulp-sass");
+const browserSync = require("browser-sync").create();
+
+// compile scss into css
+function style() {
+  return src("./scss/**/*.scss")
+    .pipe(sass().on("error", sass.logError))
+    .pipe(dest("./css"))
+    .pipe(browserSync.stream());
+}
+
+function watchTut() {
+  browserSync.init({
+    server: {
+      baseDir: "./",
+    },
+  });
+  watch("./scss/**/*.scss", style);
+  watch("./**/*.html").on("change", browserSync.reload);
+  watch("./js/**/*.js", style).on("change", browserSync.reload);
+}
+
 const jsPath = "src/assets/js/**/*.js";
 const cssPath = "src/assets/css/**/*.css";
 
@@ -40,6 +62,9 @@ function cssTask() {
 function watchTask() {
   watch([cssPath, jsPath], { interval: 1000 }, parallel(cssTask, jsTask));
 }
+
+exports.style = style;
+exports.watch = watchTut;
 
 exports.cssTask = cssTask;
 exports.jsTask = jsTask;
